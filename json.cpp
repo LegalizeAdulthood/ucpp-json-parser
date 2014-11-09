@@ -16,7 +16,7 @@ bool parse(std::string const& text)
         return result;
     }
 
-    throw std::runtime_error("failed to parse input");
+    throw std::domain_error("invalid JSON input");
 }
 
 }

@@ -6,6 +6,7 @@
 BOOST_AUTO_TEST_CASE(boolean_true)
 {
     const std::string text{"true"};
+
     const bool value = json::parse(text);
 
     BOOST_REQUIRE(value);
@@ -14,7 +15,15 @@ BOOST_AUTO_TEST_CASE(boolean_true)
 BOOST_AUTO_TEST_CASE(boolean_false)
 {
     const std::string text{"false"};
+
     const bool value = json::parse(text);
 
     BOOST_REQUIRE(!value);
+}
+
+BOOST_AUTO_TEST_CASE(malformed_json_throws_domain_error)
+{
+    const std::string text{"some arbitrary text"};
+
+    BOOST_REQUIRE_THROW(json::parse(text), std::domain_error);
 }
