@@ -41,12 +41,14 @@ struct json_grammar : grammar<Iter, json::value(), skipper>
         array_value = '[' >> ((value % ',') | eps) >> ']';
         key_value = quoted_string >> ':' >> value;
         object_value = ('{' >> ((key_value % ',') | eps) >> '}');
+        null_value = lit("null") >> attr(json::null());
         value = boolean | integer | number | quoted_string
-            | array_value | object_value;
+            | array_value | object_value | null_value;
         start = value;
     }
 
     rule<Iter, json::value(),    skipper> start;
+    rule<Iter, json::null(),     skipper> null_value;
     rule<Iter, bool(),           skipper> boolean;
     rule<Iter, int(),            skipper> integer;
     rule<Iter, double(),         skipper> number;

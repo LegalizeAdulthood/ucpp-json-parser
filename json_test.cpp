@@ -222,3 +222,12 @@ BOOST_AUTO_TEST_CASE(object_with_multiple_fields)
     BOOST_REQUIRE_EQUAL(json::Object, it->second.which());
     BOOST_REQUIRE_EQUAL(0, boost::get<json::object>(it->second).size());
 }
+
+BOOST_AUTO_TEST_CASE(null_value)
+{
+    const std::string text{"null"};
+
+    const auto value = json::parse(text);
+
+    BOOST_REQUIRE_EQUAL(json::Null, value.which());
+}

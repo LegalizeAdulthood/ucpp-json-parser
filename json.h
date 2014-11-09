@@ -19,16 +19,21 @@ enum value_types
     Number,
     String,
     Array,
-    Object
+    Object,
+    Null
 };
 
 struct array;
 struct object;
+struct null
+{
+};
 
 typedef boost::variant<
     bool, int, double, std::string,
     boost::recursive_wrapper<array>,
-    boost::recursive_wrapper<object>
+    boost::recursive_wrapper<object>,
+    null
 > value;
 
 struct array : public std::vector<value>
