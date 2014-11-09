@@ -4,10 +4,19 @@
 
 #include <string>
 
+#include <boost/variant/variant.hpp>
+
 namespace json
 {
 
-extern bool parse(std::string const& text);
+enum value_types
+{
+    Boolean = 0,
+    Integer = 1
+};
+
+typedef boost::variant<bool, int> value;
+extern value parse(std::string const& text);
 
 }
 

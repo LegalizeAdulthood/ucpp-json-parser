@@ -1,24 +1,27 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
+#include <boost/variant/get.hpp>
 #include "json.h"
 
 BOOST_AUTO_TEST_CASE(boolean_true)
 {
     const std::string text{"true"};
 
-    const bool value = json::parse(text);
+    const auto value = json::parse(text);
 
-    BOOST_REQUIRE(value);
+    BOOST_REQUIRE_EQUAL(json::Boolean, value.which());
+    BOOST_REQUIRE(boost::get<bool>(value));
 }
 
 BOOST_AUTO_TEST_CASE(boolean_false)
 {
     const std::string text{"false"};
 
-    const bool value = json::parse(text);
+    const auto value = json::parse(text);
 
-    BOOST_REQUIRE(!value);
+    BOOST_REQUIRE_EQUAL(json::Boolean, value.which());
+    BOOST_REQUIRE(!boost::get<bool>(value));
 }
 
 BOOST_AUTO_TEST_CASE(malformed_json_throws_domain_error)
@@ -26,4 +29,24 @@ BOOST_AUTO_TEST_CASE(malformed_json_throws_domain_error)
     const std::string text{"some arbitrary text"};
 
     BOOST_REQUIRE_THROW(json::parse(text), std::domain_error);
+}
+
+BOOST_AUTO_TEST_CASE(positive_integer_value)
+{
+    const std::string text{"666"};
+
+    const auto value = json::parse(text);
+
+    BOOST_REQUIRE_EQUAL(json::Integer, value.which());
+    BOOST_REQUIRE_EQUAL(666, boost::get<int>(value));
+}
+
+BOOST_AUTO_TEST_CASE(negative_integer_value)
+{
+    const std::string text{"-666"};
+
+    const auto value = json::parse(text);
+
+    BOOST_REQUIRE_EQUAL(json::Integer, value.which());
+    BOOST_REQUIRE_EQUAL(-666, boost::get<int>(value));
 }

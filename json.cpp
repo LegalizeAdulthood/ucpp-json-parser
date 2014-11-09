@@ -5,12 +5,12 @@
 namespace json
 {
 
-bool parse(std::string const& text)
+value parse(std::string const& text)
 {
     using namespace boost::spirit::qi;
     std::string::const_iterator start{text.begin()};
-    bool result = false;
-    if (phrase_parse(start, text.end(), bool_, ascii::space, result)
+    value result;
+    if (phrase_parse(start, text.end(), bool_ | int_, ascii::space, result)
         && start == text.end())
     {
         return result;
