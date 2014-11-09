@@ -2,6 +2,7 @@
 #include "json.h"
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/spirit/include/qi.hpp>
+#include <stdexcept>
 
 using namespace boost::spirit::qi;
 
