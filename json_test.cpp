@@ -100,3 +100,13 @@ BOOST_AUTO_TEST_CASE(non_empty_string)
     BOOST_REQUIRE_EQUAL(json::String, value.which());
     BOOST_REQUIRE_EQUAL("scooby", boost::get<std::string>(value));
 }
+
+BOOST_AUTO_TEST_CASE(escaped_characters_in_string)
+{
+    const std::string text{R"json("\"\\\/\b\f\n\r\t")json"};
+
+    const auto value = json::parse(text);
+
+    BOOST_REQUIRE_EQUAL(json::String, value.which());
+    BOOST_REQUIRE_EQUAL("\"\\/\b\f\n\r\t", boost::get<std::string>(value));
+}

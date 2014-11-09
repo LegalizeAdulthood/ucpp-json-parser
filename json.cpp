@@ -17,7 +17,15 @@ struct json_grammar : grammar<Iter, json::value(), skipper>
         boolean = bool_;
         integer = int_ >> !no_case[char_(".e")];
         number = double_;
-        quoted_string = '"' >> *(char_ - '"') >> '"';
+        escapes.add(R"(\")", '"')
+            (R"(\\)", '\\')
+            (R"(\/)", '/')
+            (R"(\b)", '\b')
+            (R"(\f)", '\f')
+            (R"(\n)", '\n')
+            (R"(\r)", '\r')
+            (R"(\t)", '\t');
+        quoted_string = '"' >> *(escapes | (char_ - '"')) >> '"';
         start = boolean | integer | number | quoted_string;
     }
 
@@ -26,6 +34,7 @@ struct json_grammar : grammar<Iter, json::value(), skipper>
     rule<Iter, int(),         skipper> integer;
     rule<Iter, double(),      skipper> number;
     rule<Iter, std::string(), skipper> quoted_string;
+    symbols<char const, char const> escapes;
 };
 
 }
