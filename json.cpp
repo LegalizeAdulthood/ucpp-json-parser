@@ -26,7 +26,9 @@ struct json_grammar : grammar<Iter, json::value(), skipper>
             (R"(\r)", '\r')
             (R"(\t)", '\t');
         quoted_string = lexeme['"' >> *(escapes | (char_ - '"')) >> '"'];
-        start = boolean | integer | number | quoted_string;
+        array_value = '[' >> ((value % ',') | eps) >> ']';
+        value = boolean | integer | number | quoted_string | array_value;
+        start = value;
     }
 
     rule<Iter, json::value(), skipper> start;
@@ -35,6 +37,8 @@ struct json_grammar : grammar<Iter, json::value(), skipper>
     rule<Iter, double(),      skipper> number;
     rule<Iter, std::string(), skipper> quoted_string;
     symbols<char const, char const> escapes;
+    rule<Iter, json::value(), skipper> value;
+    rule<Iter, json::array(), skipper> array_value;
 };
 
 }

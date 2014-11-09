@@ -120,3 +120,58 @@ BOOST_AUTO_TEST_CASE(string_with_spaces)
     BOOST_REQUIRE_EQUAL(json::String, value.which());
     BOOST_REQUIRE_EQUAL("howdy doodly do", boost::get<std::string>(value));
 }
+
+BOOST_AUTO_TEST_CASE(empty_array)
+{
+    const std::string text{"[]"};
+
+    const auto value = json::parse(text);
+
+    BOOST_REQUIRE_EQUAL(json::Array, value.which());
+    BOOST_REQUIRE_EQUAL(0, boost::get<json::array>(value).size());
+}
+
+BOOST_AUTO_TEST_CASE(array_of_single_integer)
+{
+    const std::string text{"[1]"};
+
+    const auto value = json::parse(text);
+
+    BOOST_REQUIRE_EQUAL(json::Array, value.which());
+    json::array const& array_value{boost::get<json::array>(value)};
+    BOOST_REQUIRE_EQUAL(1, array_value.size());
+    BOOST_REQUIRE_EQUAL(json::Integer, array_value[0].which());
+    BOOST_REQUIRE_EQUAL(1, boost::get<int>(array_value[0]));
+}
+
+BOOST_AUTO_TEST_CASE(mixed_value_array)
+{
+    const std::string text{R"json([1,"one for me"])json"};
+
+    const auto value = json::parse(text);
+
+    BOOST_REQUIRE_EQUAL(json::Array, value.which());
+    json::array const& array_value{boost::get<json::array>(value)};
+    BOOST_REQUIRE_EQUAL(2, array_value.size());
+    BOOST_REQUIRE_EQUAL(json::Integer, array_value[0].which());
+    BOOST_REQUIRE_EQUAL(1, boost::get<int>(array_value[0]));
+    BOOST_REQUIRE_EQUAL(json::String, array_value[1].which());
+    BOOST_REQUIRE_EQUAL("one for me", boost::get<std::string>(array_value[1]));
+}
+
+BOOST_AUTO_TEST_CASE(nested_array)
+{
+    const std::string text{R"json([1,"one for me",[2,"and two for you"]])json"};
+
+    const auto value = json::parse(text);
+
+    BOOST_REQUIRE_EQUAL(json::Array, value.which());
+    json::array const& array_value{boost::get<json::array>(value)};
+    BOOST_REQUIRE_EQUAL(3, array_value.size());
+    BOOST_REQUIRE_EQUAL(json::Array, array_value[2].which());
+    json::array const& nested_array{boost::get<json::array>(array_value[2])};
+    BOOST_REQUIRE_EQUAL(json::Integer, nested_array[0].which());
+    BOOST_REQUIRE_EQUAL(2, boost::get<int>(nested_array[0]));
+    BOOST_REQUIRE_EQUAL(json::String, nested_array[1].which());
+    BOOST_REQUIRE_EQUAL("and two for you", boost::get<std::string>(nested_array[1]));
+}
