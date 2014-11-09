@@ -80,3 +80,23 @@ BOOST_AUTO_TEST_CASE(negative_number_value)
     BOOST_REQUIRE_EQUAL(json::Number, value.which());
     BOOST_REQUIRE_EQUAL(-6.02e23, boost::get<double>(value));
 }
+
+BOOST_AUTO_TEST_CASE(empty_string)
+{
+    const std::string text{R"json("")json"};
+
+    const auto value = json::parse(text);
+
+    BOOST_REQUIRE_EQUAL(json::String, value.which());
+    BOOST_REQUIRE_EQUAL("", boost::get<std::string>(value));
+}
+
+BOOST_AUTO_TEST_CASE(non_empty_string)
+{
+    const std::string text{R"json("scooby")json"};
+
+    const auto value = json::parse(text);
+
+    BOOST_REQUIRE_EQUAL(json::String, value.which());
+    BOOST_REQUIRE_EQUAL("scooby", boost::get<std::string>(value));
+}

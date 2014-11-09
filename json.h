@@ -13,10 +13,11 @@ enum value_types
 {
     Boolean,
     Integer,
-    Number
+    Number,
+    String
 };
 
-typedef boost::variant<bool, int, double> value;
+typedef boost::variant<bool, int, double, std::string> value;
 extern value parse(std::string const& text);
 
 }

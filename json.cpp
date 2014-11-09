@@ -10,7 +10,11 @@ value parse(std::string const& text)
     using namespace boost::spirit::qi;
     std::string::const_iterator start{text.begin()};
     value result;
-    if (phrase_parse(start, text.end(), bool_ | (int_ >> !no_case[char_(".e")]) | double_, ascii::space, result)
+    if (phrase_parse(start, text.end(),
+            bool_
+            | (int_ >> !no_case[char_(".e")])
+            | double_
+            | ('"' >> *(char_ - '"') >> '"'), ascii::space, result)
         && start == text.end())
     {
         return result;
