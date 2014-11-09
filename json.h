@@ -11,11 +11,12 @@ namespace json
 
 enum value_types
 {
-    Boolean = 0,
-    Integer = 1
+    Boolean,
+    Integer,
+    Number
 };
 
-typedef boost::variant<bool, int> value;
+typedef boost::variant<bool, int, double> value;
 extern value parse(std::string const& text);
 
 }
