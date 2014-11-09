@@ -2,6 +2,7 @@
 #if !defined(JSON_H)
 #define JSON_H
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -17,17 +18,24 @@ enum value_types
     Integer,
     Number,
     String,
-    Array
+    Array,
+    Object
 };
 
 struct array;
+struct object;
 
 typedef boost::variant<
     bool, int, double, std::string,
-    boost::recursive_wrapper<array>
+    boost::recursive_wrapper<array>,
+    boost::recursive_wrapper<object>
 > value;
 
 struct array : public std::vector<value>
+{
+};
+
+struct object : public std::map<std::string, value>
 {
 };
 

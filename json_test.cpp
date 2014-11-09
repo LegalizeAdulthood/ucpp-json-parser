@@ -175,3 +175,50 @@ BOOST_AUTO_TEST_CASE(nested_array)
     BOOST_REQUIRE_EQUAL(json::String, nested_array[1].which());
     BOOST_REQUIRE_EQUAL("and two for you", boost::get<std::string>(nested_array[1]));
 }
+
+BOOST_AUTO_TEST_CASE(empty_object)
+{
+    const std::string text{"{}"};
+
+    const auto value = json::parse(text);
+
+    BOOST_REQUIRE_EQUAL(json::Object, value.which());
+    BOOST_REQUIRE_EQUAL(0, boost::get<json::object>(value).size());
+}
+
+BOOST_AUTO_TEST_CASE(object_with_single_field)
+{
+    const std::string text{R"json({"key": "value"})json"};
+
+    const auto value = json::parse(text);
+
+    BOOST_REQUIRE_EQUAL(json::Object, value.which());
+    json::object const& obj{boost::get<json::object>(value)};
+    BOOST_REQUIRE_EQUAL(1, obj.size());
+    auto it = obj.find("key");
+    BOOST_REQUIRE(obj.end() != it);
+    BOOST_REQUIRE_EQUAL(json::String, it->second.which());
+    BOOST_REQUIRE_EQUAL("value", boost::get<std::string>(it->second));
+}
+
+BOOST_AUTO_TEST_CASE(object_with_multiple_fields)
+{
+    const std::string text{R"json({
+        "s": "value",
+        "b": true,
+        "i": 1,
+        "n": 6.02e23,
+        "a": [],
+        "o": {}
+    })json"};
+
+    const auto value = json::parse(text);
+
+    BOOST_REQUIRE_EQUAL(json::Object, value.which());
+    json::object const& obj{boost::get<json::object>(value)};
+    BOOST_REQUIRE_EQUAL(6, obj.size());
+    auto it = obj.find("o");
+    BOOST_REQUIRE(obj.end() != it);
+    BOOST_REQUIRE_EQUAL(json::Object, it->second.which());
+    BOOST_REQUIRE_EQUAL(0, boost::get<json::object>(it->second).size());
+}
