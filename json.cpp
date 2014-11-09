@@ -25,7 +25,7 @@ struct json_grammar : grammar<Iter, json::value(), skipper>
             (R"(\n)", '\n')
             (R"(\r)", '\r')
             (R"(\t)", '\t');
-        quoted_string = '"' >> *(escapes | (char_ - '"')) >> '"';
+        quoted_string = lexeme['"' >> *(escapes | (char_ - '"')) >> '"'];
         start = boolean | integer | number | quoted_string;
     }
 
