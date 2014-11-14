@@ -231,3 +231,13 @@ BOOST_AUTO_TEST_CASE(null_value)
 
     BOOST_REQUIRE_EQUAL(json::Null, value.which());
 }
+
+BOOST_AUTO_TEST_CASE(escaped_unicode_character_in_ascii_range)
+{
+    const std::string text{R"json("What\u0020\u0061\u0020great day!")json"};
+
+    const auto value = json::parse(text);
+
+    BOOST_REQUIRE_EQUAL(json::String, value.which());
+    BOOST_REQUIRE_EQUAL("What a great day!", boost::get<std::string>(value));
+}

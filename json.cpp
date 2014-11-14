@@ -37,7 +37,11 @@ struct json_grammar : grammar<Iter, json::value(), skipper>
             (R"(\n)", '\n')
             (R"(\r)", '\r')
             (R"(\t)", '\t');
-        quoted_string = lexeme['"' >> *(escapes | (char_ - '"')) >> '"'];
+        uint_parser<char, 16, 2, 2> hex_ascii_char;
+        unicode_escape = R"(\u00)" >> hex_ascii_char;
+        quoted_string = lexeme['"' >>
+            *(escapes | unicode_escape | (char_ - '"' - '\\'))
+            >> '"'];
         array_value = '[' >> ((value % ',') | eps) >> ']';
         key_value = quoted_string >> ':' >> value;
         object_value = ('{' >> ((key_value % ',') | eps) >> '}');
@@ -53,6 +57,7 @@ struct json_grammar : grammar<Iter, json::value(), skipper>
     rule<Iter, int(),            skipper> integer;
     rule<Iter, double(),         skipper> number;
     rule<Iter, std::string(),    skipper> quoted_string;
+    rule<Iter, char()> unicode_escape;
     symbols<char const, char const> escapes;
     rule<Iter, json::value(),    skipper> value;
     rule<Iter, json::array(),    skipper> array_value;
