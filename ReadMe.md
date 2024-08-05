@@ -93,3 +93,9 @@ digit := "0" | non-zero-digit
 
 exponent-part := ("e" | "E") [("+" | "-")] digit+
 ```
+
+This repository contains source code to accompany a Utah C++ Programmers presentation.
+
+[Utah C++ Programmers](https://meetup.com/utah-cpp-programmers)\
+[Past Topics](https://utahcpp.wordpress.com/past-meeting-topics/)\
+[Future Topics](https://utahcpp.wordpress.com/future-meeting-topics/)
